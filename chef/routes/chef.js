@@ -41,5 +41,20 @@ router.delete('/delete/:name', async (req, res) => {
     res.status(200).json({ message: 'Chef supprimé avec succès', chef: deletedChef });
 });
 
+router.get('/search', async (req, res) => {
+    const { term } = req.query; 
+
+   
+    const chefs = await Chef.find({
+        $or: [
+            { nom: { $regex: term, $options: 'i' } },
+            { specialite: { $regex: term, $options: 'i' } },
+            { age: { $regex: term, $options: 'i' } }
+        ]
+    });
+
+    res.status(200).json({ chefs });
+});
+
 
 module.exports=router
